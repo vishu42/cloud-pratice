@@ -1,0 +1,6 @@
+[submodule "vault"] 
+  path = vault 
+  url = git://https://github.com/vishu42/cloud-pratice.git/
+[submodule "aks"] 
+  path = aks 
+  url = git://https://github.com/vishu42/cloud-pratice.git/
