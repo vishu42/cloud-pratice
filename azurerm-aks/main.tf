@@ -10,6 +10,13 @@ locals {
   subnet_prefix_lengths = [
     for i in range(2) : cidrsubnet(var.aks_cidr, 8, i)
   ]
+  key_vault_stub = replace(lower(data.azurerm_subscription.default.display_name), " ", "-")
+}
+
+# load vault details
+data "azurerm_key_vault" "target" {
+  name                = "shared-${local.key_vault_stub}-kv"
+  resource_group_name = "${local.key_vault_stub}-rg"
 }
 
 # Create active directory application
@@ -145,7 +152,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   location            = azurerm_resource_group.default.0.location
   resource_group_name = azurerm_resource_group.default.0.name
   kubernetes_version  = var.aks_k8s_version
-
+  local_account_disabled = false
   # Setup the Agent pool for the cluster.
   default_node_pool {
     name           = "default"
@@ -162,6 +169,12 @@ resource "azurerm_kubernetes_cluster" "default" {
   service_principal {
     client_id     = azuread_application.service_principal[0].application_id
     client_secret = azuread_service_principal_password.service_principal_sp_pwd[0].value
+  }
+
+  role_based_access_control_enabled = true
+  azure_active_directory_role_based_access_control {
+    managed                = true
+    azure_rbac_enabled     = true
   }
 
   ingress_application_gateway {
