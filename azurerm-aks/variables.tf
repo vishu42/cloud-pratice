@@ -19,7 +19,6 @@ variable "aks_cidr" {
 
 variable "tags" {
   description = "Tags for the AKS cluster"
-  default     = {"environment" = "dev"}
 }
 
 variable "aks_k8s_version" {
