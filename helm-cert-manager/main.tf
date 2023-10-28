@@ -43,7 +43,7 @@ locals {
 }
 
 resource "helm_release" "cert-manager" {
-  count            = var.cert-manager-enable
+  count            = var.certmanager_enable
   name             = "${var.namespace}"
   repository       = "https://charts.jetstack.io"
   chart            = "cert-manager"
@@ -61,7 +61,7 @@ resource "helm_release" "cert-manager" {
 
 # issuer for cert-manager
 resource "local_file" "issuer_manifest" {
-  count    = var.cert-manager-enable
+  count    = var.certmanager_enable
   filename = "issuer.yaml"
   content = <<-EOF
 apiVersion: cert-manager.io/v1
@@ -91,7 +91,7 @@ EOF
 
 # create issuer
 resource "kubectl_manifest" "issuer" {
-  count    = var.cert-manager-enable
+  count    = var.certmanager_enable
   yaml_body = local_file.issuer_manifest[0].content
   depends_on = [
     helm_release.cert-manager,

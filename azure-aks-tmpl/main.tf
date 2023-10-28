@@ -16,12 +16,5 @@ module "aks" {
   depends_on         = [module.vault]
 }
 
-module "helm-cert-manager" {
-  source = "../helm-cert-manager"
-  depends_on = [module.aks]
-  aks_cluster_name = local.aks_cluster_name
-  cert-manager-enable = "true"
-  namespace = "cert-manager"
-}
 
 
