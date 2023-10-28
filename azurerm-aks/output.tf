@@ -58,4 +58,16 @@ resource "azurerm_key_vault_secret" "host" {
   value        = try(azurerm_kubernetes_cluster.default[0].kube_admin_config[0].host, "nocluster")
 }
 
+resource "azurerm_key_vault_secret" "azure-sp-id" {
+  key_vault_id = data.azurerm_key_vault.target.id
+  name         = "azure-sp-id"
+  value        = azuread_service_principal.service_principal[0].id
+}
+
+resource "azurerm_key_vault_secret" "azure-sp-secret" {
+  key_vault_id = data.azurerm_key_vault.target.id
+  name         = "azure-sp-secret"
+  value        = azuread_service_principal_password.service_principal_sp_pwd[0].value
+}
+
 
